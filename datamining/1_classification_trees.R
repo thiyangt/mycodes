@@ -169,3 +169,24 @@ boston.results <- resamples(list(lm=fit.lm,
 # Summary and Plot of Results
 summary(boston.results)
 dotplot(boston.results)
+
+#-------------
+# install.packages("remotes")
+remotes::install_github("grantmcdermott/parttree")
+
+library(parsnip)
+library(titanic) ## Just for a different data set
+set.seed(123) ## For consistent jitter
+titanic_train$Survived = as.factor(titanic_train$Survived)
+## Build our tree using parsnip (but with rpart as the model engine)
+ti_tree =
+  decision_tree() %>%
+  set_engine("rpart") %>%
+  set_mode("classification") %>%
+  fit(Survived ~ Pclass + Age, data = titanic_train)
+## Plot the data and model partitions
+titanic_train %>%
+  ggplot(aes(x=Pclass, y=Age)) +
+  geom_jitter(aes(col=Survived), alpha=0.7) +
+  geom_parttree(data = ti_tree, aes(fill=Survived), alpha = 0.1) +
+  theme_minimal()
