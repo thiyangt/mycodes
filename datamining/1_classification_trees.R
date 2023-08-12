@@ -159,6 +159,7 @@ fit.glm <- train(medv~., data=train, method='glm', metric=metric,
                   trControl=control)
 fit.cart <- train(medv~., data=train, method='rpart', metric=metric, 
                    trControl=control)
+rpart.plot(fit.cart, type = 3, box.palette = c("red", "grey"), fallen.leaves = TRUE)
 
 # Compare the results of these algorithms
 boston.results <- resamples(list(lm=fit.lm, 
